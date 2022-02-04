@@ -43,7 +43,7 @@ public class GameResource {
         if (request == null || request.name == null) {
             return Response.status(400).build();
         }
-        gameService.createGame(request.name);
-        return null;
+        var gameEntity = gameService.createGame(request.name);
+        return Response.ok(gameEntity).build();
     }
 }

@@ -6,6 +6,7 @@ import fr.epita.assistant.jws.data.model.GameModel;
 import fr.epita.assistant.jws.data.model.PlayerModel;
 import fr.epita.assistant.jws.domain.entity.GameEntity;
 import fr.epita.assistant.jws.domain.entity.PlayerEntity;
+import fr.epita.assistant.jws.presentation.rest.response.GameDetailResponseDTO;
 
 @ApplicationScoped
 public class Converter {
@@ -29,6 +30,29 @@ public class Converter {
             model.posx,
             model.posy,
             model.position
+        );
+    }
+
+    public GameDetailResponseDTO convertGameEntityToDetailResponseDTO(GameEntity entity)
+    {
+        return new GameDetailResponseDTO(
+            entity.id,
+            entity.startTime,
+            entity.state
+        );
+    }
+
+    public GameDetailResponseDTO.PlayerResponseDTO convertPlayerEntityPlayerResponseDTO(PlayerEntity entity)
+    {
+        return new GameDetailResponseDTO.PlayerResponseDTO(
+            entity.id,
+            entity.lastbomb,
+            entity.lastmovement,
+            entity.lives,
+            entity.name,
+            entity.posx,
+            entity.posy,
+            entity.position
         );
     }
     

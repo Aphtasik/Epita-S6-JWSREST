@@ -11,5 +11,4 @@ public class GameResponseDTO {
     Long id;
     Timestamp starttime;
     GameState state;
-    
 }
