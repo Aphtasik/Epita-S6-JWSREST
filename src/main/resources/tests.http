@@ -1,6 +1,10 @@
-POST http://localhost:8082/
+PUT http://localhost:8082/games
 Content-Type: application/json
 
 {
-    "name": "AlexCeGrosBgLa"
+    "id": 1,
+    "startTime": null,
+    "state": "STARTING",
+    "map": null,
+    "players": null
 }

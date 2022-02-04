@@ -1,4 +1,4 @@
-package fr.epita.assistant.jws.converter;
+/*package fr.epita.assistant.jws.converter;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -56,4 +56,4 @@ public class Converter {
         );
     }
     
-}
+}*/
