@@ -1,4 +1,7 @@
-/*package fr.epita.assistant.jws.converter;
+package fr.epita.assistant.jws.converter;
+
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -6,54 +9,31 @@ import fr.epita.assistant.jws.data.model.GameModel;
 import fr.epita.assistant.jws.data.model.PlayerModel;
 import fr.epita.assistant.jws.domain.entity.GameEntity;
 import fr.epita.assistant.jws.domain.entity.PlayerEntity;
-import fr.epita.assistant.jws.presentation.rest.response.GameDetailResponseDTO;
 
 @ApplicationScoped
 public class Converter {
-    public GameEntity convertGameModelToEntity(GameModel model)
-    {
-        return new GameEntity(
-            model.id,
-            model.startTime,
-            model.state
-        );
-    }
 
     public PlayerEntity convertPlayerModelToEntity(PlayerModel model)
     {
         return new PlayerEntity(
             model.id,
-            model.lastbomb,
-            model.lastmovement,
+            model.lastBomb,
+            model.lastMovement,
             model.lives,
             model.name,
             model.posx,
-            model.posy,
-            model.position
+            model.posy
         );
     }
 
-    public GameDetailResponseDTO convertGameEntityToDetailResponseDTO(GameEntity entity)
+    public GameEntity convertGameModelToEntity(GameModel model)
     {
-        return new GameDetailResponseDTO(
-            entity.id,
-            entity.startTime,
-            entity.state
+        return new GameEntity(
+            model.id,
+            model.startTime,
+            model.state,
+            model.map,
+            model.players.stream().map(player -> convertPlayerModelToEntity(player)).collect(Collectors.toList())
         );
     }
-
-    public GameDetailResponseDTO.PlayerResponseDTO convertPlayerEntityPlayerResponseDTO(PlayerEntity entity)
-    {
-        return new GameDetailResponseDTO.PlayerResponseDTO(
-            entity.id,
-            entity.lastbomb,
-            entity.lastmovement,
-            entity.lives,
-            entity.name,
-            entity.posx,
-            entity.posy,
-            entity.position
-        );
-    }
-    
-}*/
+}

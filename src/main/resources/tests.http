@@ -2,9 +2,5 @@ PUT http://localhost:8082/games
 Content-Type: application/json
 
 {
-    "id": 1,
-    "startTime": null,
-    "state": "STARTING",
-    "map": null,
-    "players": null
+    "name": "oui"
 }
