@@ -1,4 +1,4 @@
-package fr.epita.assistant.jws.presentation.rest.response;
+package fr.epita.assistant.jws.domain.entity;
 
 import java.sql.Timestamp;
 
@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor @NoArgsConstructor
-public class GameResponseDTO {
-    Long id;
-    Timestamp starttime;
-    GameState state;
-    
+public class GameEntity {
+    public Long id;
+    public Timestamp startTime;
+    public GameState state;
 }

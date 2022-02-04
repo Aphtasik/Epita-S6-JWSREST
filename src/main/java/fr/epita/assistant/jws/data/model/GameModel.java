@@ -1,6 +1,6 @@
 package fr.epita.assistant.jws.data.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +16,7 @@ import lombok.With;
 @Entity @Table(name = "game")
 @AllArgsConstructor @NoArgsConstructor @With
 public class GameModel {
-    public @Id @GeneratedValue(strategy = GenerationType.IDENTITY) long id;
+    public @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     public Timestamp startTime;
     public GameState state;
 }
