@@ -1,7 +1,12 @@
 package fr.epita.assistant.jws.domain.service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -12,8 +17,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import com.google.common.base.Objects;
+
 import fr.epita.assistant.jws.converter.Converter;
 import fr.epita.assistant.jws.data.model.GameModel;
+import fr.epita.assistant.jws.data.model.PlayerModel;
 import fr.epita.assistant.jws.data.repository.GameRepository;
 import fr.epita.assistant.jws.data.repository.PlayerRepository;
 import fr.epita.assistant.jws.domain.entity.GameEntity;
@@ -32,24 +40,138 @@ public class GameService {
     @Inject PlayerRepository playerRepository;
     @Inject Converter converter;
 
-    public final List<GameEntity> getGames() {
-        return gameRepository.findAll().stream()
+    public List<GameEntity> getGames() {
+        return gameRepository.findAll().list().stream()
         .map(model -> converter.convertGameModelToEntity(model))
         .collect(Collectors.toList());
     } 
 
-    @Transactional
-    public GameModel createGame(String playerName)
+    public String createMap(String path)
     {
+        Path file = Paths.get(path);
+        StringBuilder map = new StringBuilder();
+        try {
+            List<String> lines = Files.readAllLines(file);
+            for (String line : lines)
+            {
+                map.append(line);
+                map.append('\n');
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return map.toString();
+    }
+    
+    public List<String> mapStringToList(String map)
+    {
+        int i = 0;
+        List<String> mapList = new ArrayList<>();
+        StringBuilder line = new StringBuilder();
+
+        while (i < map.length())
+        {
+            if (map.charAt(i) == '\n')
+            {
+                mapList.add(line.toString());
+                line = new StringBuilder();
+            }
+            else
+            {
+                line.append(map.charAt(i));
+            }
+            i++;
+        }
+        mapList.add(line.toString());
+        return mapList;
+    }
+
+    public boolean idExist(Long id)
+    {
+        return gameRepository.findAll().list().stream()
+            .anyMatch(game -> game.id.equals(id));
+    }
+
+    public PlayerModel playerSetPosition(PlayerModel player, int playerNumber)
+    {
+        switch (playerNumber)
+        {
+            case 2:
+                player.posx = 15;
+                player.posy = 1;
+                break;
+            case 3:
+                player.posx = 1;
+                player.posy = 13;
+                break;
+            default:
+                player.posx = 15;
+                player.posy = 13;
+                break;
+        }
+        return player;
+    }
+
+    @Transactional
+    public GameEntity startGame(Long id)
+    {
+        GameModel gameModel = gameRepository.findAll().list().stream()
+            .filter(game -> Objects.equal(game.id, id))
+            .findFirst()
+            .orElse(null);
+        gameModel.startTime = LocalDateTime.now();
+        gameModel.state = GameState.RUNNING;
+        return converter.convertGameModelToEntity(gameModel);
+    }
+
+    @Transactional
+    public GameEntity joinGame(Long id, String playerName)
+    {
+        GameModel gameModel = gameRepository.findAll().list().stream()
+            .filter(game -> Objects.equal(game.id, id))
+            .findFirst()
+            .orElse(null);
+
+        if (gameModel == null || gameModel.state.equals(GameState.RUNNING) || gameModel.players.size() >= 4)
+            return null;
+
+        PlayerModel playerModel = new PlayerModel()
+            .withName(playerName)
+            .withLives(3);
+        playerModel = playerSetPosition(playerModel, gameModel.players.size() + 1);
+        playerRepository.persist(playerModel);
+        gameModel.players.add(playerModel); 
+
+        return converter.convertGameModelToEntity(gameModel);
+    }
+
+    @Transactional
+    public GameEntity createGame(String playerName)
+    {
+        String givenMap = System.getenv("JWS_MAP_PATH");
+        if (givenMap == null)
+            givenMap = "src/test/resources/map1.rle";
+        
+        // Create First new player
+        List<PlayerModel> players = new ArrayList<>();
+        PlayerModel playerModel = new PlayerModel()
+            .withName(playerName)
+            .withPosx(1)
+            .withPosy(1)
+            .withLives(3);
+        playerRepository.persist(playerModel);
+        players.add(playerModel);
+
+        // Create game
         GameModel gameModel = new GameModel()
             .withStartTime(LocalDateTime.now())
             .withState(GameState.STARTING)
-            .withMap("todo")
-            .withPlayers(null);
+            .withPlayers(players)
+            .withMap(createMap(givenMap));
         gameRepository.persist(gameModel);
-            //TODO: Map function
-            //TODO: Player function
-        return gameModel;
+        return converter.convertGameModelToEntity(gameModel);
     }
 }
 

@@ -1,6 +1,19 @@
-PUT http://localhost:8082/games
+POST http://localhost:8082/games
 Content-Type: application/json
 
 {
-    "name": "oui"
+    "name": "paul"
 }
+### 
+GET http://localhost:8082/games
+###
+GET http://localhost:8082/games/13
+###
+POST http://localhost:8082/games/16
+Content-Type: application/json
+
+{
+    "name": "sdjpgiosa"
+}
+###
+PATCH http://localhost:8082/games/13/start

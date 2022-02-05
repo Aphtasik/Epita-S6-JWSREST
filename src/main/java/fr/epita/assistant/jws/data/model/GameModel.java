@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +23,6 @@ public class GameModel {
     public @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
     public LocalDateTime startTime;
     public GameState state;
-    public String map;
+    public @Column(columnDefinition = "TEXT") String map;
     public @OneToMany(cascade = CascadeType.ALL) List<PlayerModel> players;
 }
