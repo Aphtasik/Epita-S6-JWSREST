@@ -142,7 +142,7 @@ public class GameService {
             .findFirst()
             .orElse(null);
 
-        if (gameModel == null || gameModel.state.equals(GameState.RUNNING) || gameModel.players.size() >= 4)
+        if (gameModel == null || gameModel.state.equals(GameState.RUNNING) || gameModel.state.equals(GameState.FINISHED) || gameModel.players.size() >= 4)
             return null;
 
         PlayerModel playerModel = new PlayerModel()
