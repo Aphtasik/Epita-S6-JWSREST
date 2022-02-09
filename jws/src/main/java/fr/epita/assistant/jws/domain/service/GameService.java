@@ -103,11 +103,11 @@ public class GameService {
                 player.posy = 1;
                 break;
             case 3:
-                player.posx = 1;
+                player.posx = 15;
                 player.posy = 13;
                 break;
             default:
-                player.posx = 15;
+                player.posx = 1;
                 player.posy = 13;
                 break;
         }
@@ -122,7 +122,15 @@ public class GameService {
             .findFirst()
             .orElse(null);
         gameModel.startTime = LocalDateTime.now();
-        gameModel.state = GameState.RUNNING;
+
+        if (gameModel.players.size() <= 1)
+        {
+            gameModel.state = GameState.FINISHED;
+        }
+        else
+        {
+            gameModel.state = GameState.RUNNING;
+        }
         return converter.convertGameModelToEntity(gameModel);
     }
 
