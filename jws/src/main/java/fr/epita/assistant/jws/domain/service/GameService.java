@@ -84,7 +84,6 @@ public class GameService {
             }
             i++;
         }
-        mapList.add(line.toString());
         return mapList;
     }
 
